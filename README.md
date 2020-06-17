@@ -1,4 +1,4 @@
-# README
+# Candidate briefing
 
 Please find below a coding problem we'd like you to solve.
 
