@@ -6,9 +6,9 @@ The purpose of this test is not to get a "right" or "wrong" answer - it's to see
 
 We'd normally expect you to spend few hours or so coding the solution.
 
-You should submit your solution in a way that makes it easy for us to use. You should zip up the code, and include Visual Studio .sln files if using .Net; if you're using Java, we'd expect to see an Ant or Maven build script.
+You should submit your solution in a way that makes it easy for us to use. We expect to see a Maven build script.
 
-Unless you include documentation to tell us otherwise, we will expect to be able to build and run the solution with no changes.
+We will expect to be able to pull, build and run the solution with no changes.
 
 It should be quick and easy for us to verify that the input does indeed lead to the expected output. Please use English as the primary language in your solution to enable us to verify the behavior.
 
