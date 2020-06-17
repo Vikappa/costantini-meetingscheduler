@@ -100,5 +100,5 @@ Your system must provide a successful booking calendar as output, with bookings 
 ## Technical requirements
 
 - Use Java 11+. You may want to use lambdas and any new feature useful to make the code more readable and maintainable.
-- Use Maven to build the code and run the tests.
+- Use Maven to build the code and run the tests. We do expect to build with a simple `mvn clean package`  and to run teh tests with `mvn test`.
 - We like to see Git atomic commits with proper comments in English. A clean git history will be part of the evaluation process.
