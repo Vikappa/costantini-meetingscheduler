@@ -92,9 +92,10 @@ public class BookingManager {
         }
 
         //Close the scanner and check method results
-        openingTimeScanner.close();
         logger.info("Opening time set: " + this.officeOpeningTime + " Closing time set: " + this.officeClosingTime);
         logger.info("The office is supposed to be open for " + (this.officeClosingTime.getHour() - this.officeOpeningTime.getHour()) + " hours");
     }
 
+    public void addSchedule(String input) {
+    }
 }
