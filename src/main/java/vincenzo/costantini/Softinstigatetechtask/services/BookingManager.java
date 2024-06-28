@@ -151,10 +151,10 @@ public class BookingManager {
 
         //check the schedule is inside the office opening hours
         if(
-            schedule.getStartHour().isAfter(officeOpeningTime) &&
-            schedule.getStartHour().isBefore(officeClosingTime) &&
-            schedule.getEndHour().isAfter(officeOpeningTime) &&
-            schedule.getEndHour().isBefore(officeClosingTime)
+            !schedule.getStartHour().isBefore(officeOpeningTime) && // non before opening === >= opening time        
+            !schedule.getStartHour().isAfter(officeClosingTime) && // non after closing === <= closing time
+            schedule.getEndHour().isAfter(officeOpeningTime) && //before opening
+            !schedule.getEndHour().isAfter(officeClosingTime) //non after closing === <= closing time
         ) {
 
             //check the schedule is not overlapping with other schedules
@@ -163,7 +163,7 @@ public class BookingManager {
                 this.schedules.sort(Comparator.comparing(Schedule::getStartAt));//sort the schedules by start time every time
                 logger.info("The schedule has been added");
             } else {
-                logger.info("The schedule is overlapping with this schedule. Please, retry");
+                logger.info("The schedule is overlapping with an other schedule. Please, retry");
                 return;
             }
 
