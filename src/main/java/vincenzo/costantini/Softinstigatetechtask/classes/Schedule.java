@@ -68,6 +68,6 @@ public class Schedule {
         String endTimeFormatted = endAt.format(timeFormatter);
 
         // Return the schedule object as request output of the task
-        return startTimeFormatted + " " + endTimeFormatted;
+        return startTimeFormatted + " " + endTimeFormatted + " " + this.employeeId;
     }
 }
