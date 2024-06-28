@@ -19,30 +19,27 @@ public class BookingCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Until explicit shutdown request, this method will ask the user to input a new schedule o print the schedules informations
         try (Scanner scanner = new Scanner(System.in)) {
-            boolean continua = true;
-            while (continua) {
+            boolean running = true;
+            while (running) {
                 logger.info("Please type a schedule, type 'INFO' to print schedules information or type 'EXIT' to shut down application");
-
-                
                 try {
-                    String scelta = scanner.nextLine();
-                    
-                    logger.debug("User input received: {}", scelta);
-                    
-                    switch (scelta) {
+                    String inputTyped = scanner.nextLine();
+                                        
+                    switch (inputTyped) {
                         case "EXIT":
-                            continua = false;
+                            running = false;
                             logger.info("Shutting down the application...");
-                            break;
+                            System.exit(0);
                         case "INFO":
                             logger.info(bookingManager.toString());
                             break;
                         default:
                             try {
-                                bookingManager.addSchedule(scelta);
+                                bookingManager.addSchedule();
                             } catch (Exception e) {
-                                logger.error("Invalid input. Please try again", e);
+                                logger.error("Schedule was not registered", e);
                             }
                             break;
                     }
