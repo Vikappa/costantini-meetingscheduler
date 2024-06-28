@@ -13,6 +13,7 @@ public class Schedule {
     //The following are used to parse the strings to LocalDateTime and TimeUnit objects
     private DateTimeFormatter bookedAtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private DateTimeFormatter startAtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
 
     public Schedule(String bookedAt, String employeeId, String startAt, int duration) {
@@ -25,6 +26,16 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return this.startAt.toLocalDate() + " " + this.employeeId;
+        // Format start time
+        String startTimeFormatted = this.startAt.format(timeFormatter);
+
+        // Calculate end time by adding duration to startAt
+        LocalDateTime endAt = this.startAt.plusHours(this.duration);
+        
+        // Format end time
+        String endTimeFormatted = endAt.format(timeFormatter);
+
+        // Return the schedule object as request output from the task
+        return startTimeFormatted + " " + endTimeFormatted;
     }
 }
