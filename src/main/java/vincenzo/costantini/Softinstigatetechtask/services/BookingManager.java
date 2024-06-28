@@ -9,12 +9,14 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
 import lombok.Setter;
 import vincenzo.costantini.Softinstigatetechtask.classes.Schedule;
 import vincenzo.costantini.Softinstigatetechtask.runners.BookingCommandLineRunner;
+import vincenzo.costantini.Softinstigatetechtask.utilities.VariousUtilities;
 
 //This class is meant as a service that stores the schedules, checks conflicts, organizes them and returns
 //resumes of the results.
@@ -24,6 +26,9 @@ import vincenzo.costantini.Softinstigatetechtask.runners.BookingCommandLineRunne
 @Setter
 public class BookingManager {
     private static final Logger logger = LoggerFactory.getLogger(BookingCommandLineRunner.class);
+
+    @Autowired
+    private VariousUtilities variousUtilities;
 
     //Date of start of tracking time
     private LocalDateTime managerCreationDate;
@@ -83,7 +88,6 @@ public class BookingManager {
                     logger.warn("The closing time must be after the opening time");
                 }else{
                     this.officeClosingTime = closingHour;
-                    logger.info("-------------------------------------------------------------------------------------");
                     validClosing = true;
                 }
             } catch (DateTimeParseException e) {
@@ -96,6 +100,30 @@ public class BookingManager {
         logger.info("The office is supposed to be open for " + (this.officeClosingTime.getHour() - this.officeOpeningTime.getHour()) + " hours");
     }
 
-    public void addSchedule(String input) {
+    public void addSchedule() {
+        Scanner scheduleInputScanner = new Scanner(System.in);
+        logger.info("Please type the schedule in the following format: request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
+        logger.info("Example: 2011-03-16 09:28:23 EMP003 (please note that if you don't type 'EMP' at the beginning of the employee id, it will not be recognized)");
+        
+        //I prepare the values to create a schedule object
+        String scheduleRequestDateTime = "";
+        String scheduleEmployee = "";
+        String scheduleStartTime = "";
+        int scheduleDuration = 0;
+        
+        boolean firstLineIsValid = false;
+
+        while (!firstLineIsValid) {
+
+            String input = scheduleInputScanner.nextLine();
+
+            if(variousUtilities.validateFirstLineStringFormat(input)){
+                logger.info("Valid input.");
+                firstLineIsValid = true;
+            } else {
+                logger.info("Invalid input. Please, insert the schedule in the format YYYY-MM-DD HH:MM:SS EMP###");
+            } 
+            scheduleInputScanner.nextLine();//Consume the remeaning input
+        }
     }
 }
