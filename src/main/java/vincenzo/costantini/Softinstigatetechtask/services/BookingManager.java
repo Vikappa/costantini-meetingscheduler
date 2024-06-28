@@ -100,9 +100,11 @@ public class BookingManager {
         logger.info("The office is supposed to be open for " + (this.officeClosingTime.getHour() - this.officeOpeningTime.getHour()) + " hours");
     }
 
+    //Note that the first line inquires about the schedule request time and employee and the second line inquires about the schedule start and duration
+   //This method asks and pharses inputs to create a schedule object, and prints direct responses if the schedule is valid or not. This is meant to be used real time during the loop iteration
     public void addSchedule() {
         Scanner scheduleInputScanner = new Scanner(System.in);
-        logger.info("Please type the schedule in the following format: request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
+        logger.info("Please type the schedule request time in the following format: request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
         logger.info("Example: 2011-03-16 09:28:23 EMP003 (please note that if you don't type 'EMP' at the beginning of the employee id, it will not be recognized)");
         
         //I prepare the values to create a schedule object
@@ -117,13 +119,35 @@ public class BookingManager {
 
             String input = scheduleInputScanner.nextLine();
 
-            if(variousUtilities.validateFirstLineStringFormat(input)){
-                logger.info("Valid input.");
+            if(variousUtilities.validateFirstLineStringFormat(input)){ //Validation via regex
                 firstLineIsValid = true;
+                scheduleRequestDateTime = input.substring(0, 19); // Since the string is checked i can take the first part
+                scheduleEmployee = input.substring(20); //The rest of the string must be EMP###
+
             } else {
-                logger.info("Invalid input. Please, insert the schedule in the format YYYY-MM-DD HH:MM:SS EMP###");
+                logger.info("Invalid input. Please, insert the schedule request time in the format YYYY-MM-DD HH:MM:SS EMP###");
             } 
             scheduleInputScanner.nextLine();//Consume the remeaning input
         }
+
+        boolean secondLineIsValid = false;
+
+        logger.info("Please type the schedule starting time and duration in the following format:");
+        logger.info("HHHH-MMM-DD HH:MM #  where the # is the duration in hours, example: '2011-03-22 14:00 2'");
+        while (!secondLineIsValid) {
+            String input = scheduleInputScanner.nextLine();
+
+            if(variousUtilities.validateSecondLineStringFormat(input)){
+                scheduleStartTime = input.substring(0, 16);
+                scheduleDuration = Integer.parseInt(input.substring(17));//the remeaning chars will be parsed as an int (even if type 999!)
+                secondLineIsValid = true;
+            } else {
+                logger.info("Invalid input. Please, insert the schedule in the format YYYY-MM-DD HH:MM:SS EMP###");
+            }
+        }
+
+        //I checked out that the string are valid, now i can create the schedule object and check if it creates clonflicts
+        Schedule schedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
+        
     }
 }

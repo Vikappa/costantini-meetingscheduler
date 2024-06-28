@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 public class VariousUtilities {
 
     //Checks if the string is in the format YYYY-MM-DD HH:MM:SS EMP###
-    public static boolean validateFirstLineStringFormat(String input) {
+    public boolean validateFirstLineStringFormat(String input) {
         // Regex pattern for the specified format: YYYY-MM-DD HH:MM:SS EMP###
         String regex = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} EMP\\d{3}";
 
@@ -22,7 +22,7 @@ public class VariousUtilities {
     }
 
     //Checks if the string is in the format YYYY-MM-DD HH:MM d (d is the duration in hours)
-    public static boolean validateSecondLineStringFormat(String input) {
+    public boolean validateSecondLineStringFormat(String input) {
         String regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2} \\d+$";
 
         Pattern pattern = Pattern.compile(regex);
