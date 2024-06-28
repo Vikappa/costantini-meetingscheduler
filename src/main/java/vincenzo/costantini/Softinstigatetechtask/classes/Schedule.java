@@ -25,11 +25,6 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return "Schedule{" +
-                "bookedAt=" + bookedAt +
-                ", employeeId='" + employeeId + '\'' +
-                ", startAt=" + startAt +
-                ", timeUnit=" + duration +
-                '}';
+        return this.startAt.toLocalDate() + " " + this.employeeId;
     }
 }
