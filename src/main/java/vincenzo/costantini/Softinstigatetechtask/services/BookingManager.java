@@ -217,6 +217,37 @@ public class BookingManager {
 
         return returnString.toString();
     }
+
+
+    //Bulk add method checks if every string is valid and then adds the schedule to the list without informing the user about scheduling error
+    public void addBulkSchedules() {
+        Scanner scanner = new Scanner(System.in);
+
+        while(scanner.hasNextLine()){
+        //I prepare the values to create a schedule object
+        String scheduleRequestDateTime = "";
+        String scheduleEmployee = "";
+        String scheduleStartTime = "";
+        int scheduleDuration = 0;
+
+            String line = scanner.nextLine().trim();
+            if(variousUtilities.validateFirstLineStringFormat(line)){
+                scheduleRequestDateTime = line.substring(0, 16);
+                scheduleEmployee = line.substring(17, 21);
+                String secondLine = scanner.nextLine().trim();
+                if(variousUtilities.validateSecondLineStringFormat(secondLine)){
+                    scheduleStartTime = secondLine.substring(0, 16);
+                    scheduleDuration = Integer.parseInt(secondLine.substring(17));//the remeaning chars will be parsed as an int (even if type 999!)
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+        this.schedules.add(new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration));
+        }
+        this.toString();
+    }
     
 
 }
