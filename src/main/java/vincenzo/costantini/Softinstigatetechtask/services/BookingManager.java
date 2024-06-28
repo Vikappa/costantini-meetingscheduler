@@ -143,11 +143,33 @@ public class BookingManager {
                 secondLineIsValid = true;
             } else {
                 logger.info("Invalid input. Please, insert the schedule in the format YYYY-MM-DD HH:MM:SS EMP###");
+                scheduleInputScanner.nextLine();//Consume the remeaning input
             }
         }
 
         //I checked out that the string are valid, now i can create the schedule object and check if it creates clonflicts
         Schedule schedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
-        
+
+        //check the schedule is inside the office opening hours
+        if(
+            schedule.getStartHour().isAfter(officeOpeningTime) &&
+            schedule.getStartHour().isBefore(officeClosingTime) &&
+            schedule.getEndHour().isAfter(officeOpeningTime) &&
+            schedule.getEndHour().isBefore(officeClosingTime)
+        ) {
+
+            //check the schedule is not overlapping with other schedules
+            if(!variousUtilities.checkScheduleConflicts(schedule, this.schedules)) {
+                this.schedules.add(schedule);
+                logger.info("The schedule has been added");
+            } else {
+                logger.info("The schedule is overlapping with this schedule. Please, retry");
+                return;
+            }
+
+        } else {
+            logger.info("The schedule is not valid because it's outside opening hours. Please, insert a valid schedule");
+            return;
+        }
     }
 }
