@@ -120,6 +120,7 @@ public class BookingManager {
             String input = scheduleInputScanner.nextLine().trim();
 
             if(variousUtilities.validateFirstLineStringFormat(input)){ //Validation via regex
+
                 scheduleRequestDateTime = input.substring(0, 19); // Since the string is checked i can take the first part
                 scheduleEmployee = input.substring(20); //The rest of the string must be EMP###
                 
@@ -129,6 +130,20 @@ public class BookingManager {
                 logger.info("Invalid input. Please, insert the schedule request time in the format YYYY-MM-DD HH:MM:SS EMP###");
             } 
         }
+
+        //Parse the request date time to check if it is unique
+        LocalDateTime requestDateTime = LocalDateTime.parse(scheduleRequestDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        //If there is any match in the schedules list throw an error
+        if(this.schedules.stream().anyMatch(sched -> {
+            return sched.getBookedAt().equals(requestDateTime);
+        })){
+            logger.info("ERROR");
+            logger.info("The schedule request time is not unique. Please, insert a different time");
+            return;
+        }
+
+
         logger.info("SUCCES!");
         boolean secondLineIsValid = false;
 

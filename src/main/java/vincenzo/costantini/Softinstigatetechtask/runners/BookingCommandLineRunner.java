@@ -25,6 +25,7 @@ public class BookingCommandLineRunner implements CommandLineRunner {
             while (running) {
                 logger.info("START MENU");
                 logger.info("Type INFO to print the schedules information, EXIT to shutdown, or type any other input to add a new schedule");
+                logger.info("(No, litterally, everything except EXIT and INFO will be considered as a new schedule, try 'BATMAN')");
                 try {
                     String inputTyped = scanner.nextLine();
                                         
