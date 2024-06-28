@@ -24,13 +24,10 @@ public class BookingCommandLineRunner implements CommandLineRunner {
             while (continua) {
                 logger.info("Please type a schedule, type 'INFO' to print schedules information or type 'EXIT' to shut down application");
 
-                // Debug log before reading input
-                logger.debug("Waiting for user input...");
                 
                 try {
                     String scelta = scanner.nextLine();
                     
-                    // Debug log after reading input
                     logger.debug("User input received: {}", scelta);
                     
                     switch (scelta) {
