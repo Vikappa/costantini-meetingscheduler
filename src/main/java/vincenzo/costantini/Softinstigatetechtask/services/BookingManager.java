@@ -1,11 +1,13 @@
 package vincenzo.costantini.Softinstigatetechtask.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -176,11 +178,30 @@ public class BookingManager {
     //Override method to get the task expected output
     @Override
     public String toString() {
-        // LocalDateTime firsdDateTime = this.schedules.get(0).getStartAt();
-        String returnString = "";
-        for (Schedule schedule : this.schedules) {
-            returnString += schedule.toString() +"\n";
+        if (this.schedules.isEmpty()) {
+            return "No schedules available.";
         }
-        return returnString;
+
+        StringBuilder returnString = new StringBuilder();
+        returnString.append("SCHEDULES:\n");
+
+        //I get an hashset of every date that has a schedule to better manage the output
+        HashSet<LocalDate> hashsetDate = new HashSet<>();
+
+        this.schedules.forEach(schedule -> {
+            hashsetDate.add(schedule.getStartDate());
+        });
+
+        //create the final output string
+        hashsetDate.forEach(date -> {
+            returnString.append(date.toString() + "\n");
+            this.schedules.stream().filter(schedule -> schedule.getStartDate().isEqual(date)).forEach(schedule -> {
+                returnString.append(schedule.toString() + "\n");
+            });
+        });
+
+        return returnString.toString();
     }
+    
+
 }
