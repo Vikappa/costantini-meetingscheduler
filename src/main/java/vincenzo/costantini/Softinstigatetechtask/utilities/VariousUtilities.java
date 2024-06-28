@@ -4,6 +4,9 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
+import vincenzo.costantini.Softinstigatetechtask.classes.Schedule;
+
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 // Il will keep various parsers and validator here to keep the main classes cleaner
@@ -30,5 +33,17 @@ public class VariousUtilities {
 
         return matcher.matches();
     }
+
+    //checks if any of the schedules in the list has a conflict with the new one
+    public boolean checkScheduleConflicts(Schedule schedule, ArrayList<Schedule> schedules) {
+        return schedules.stream().anyMatch(existingSchedule -> hasConflict(schedule, existingSchedule));
+    }
+    
+    // This is a helper method that defines the conflict condition
+    private boolean hasConflict(Schedule schedule1, Schedule schedule2) {
+        return (schedule1.getStartDate() != schedule2.getStartDate() ) || (schedule1.getStartHour().isBefore(schedule2.getEndHour()) &&
+               schedule2.getStartHour().isBefore(schedule1.getEndHour()));
+    }
+    
 
 }
