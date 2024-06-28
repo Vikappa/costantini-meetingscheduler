@@ -30,8 +30,6 @@ public class BookingManager {
     @Autowired
     private VariousUtilities variousUtilities;
 
-    //Date of start of tracking time
-    private LocalDateTime managerCreationDate;
 
     //All the schedules
     private ArrayList<Schedule> schedules;
@@ -42,8 +40,6 @@ public class BookingManager {
 
 
     public BookingManager(){
-        //Initialize the manager creation date
-        this.managerCreationDate = LocalDateTime.now();
         this.schedules = new ArrayList<Schedule>();
         this.askOfficeOpeningTime();
     }
@@ -104,7 +100,8 @@ public class BookingManager {
    //This method asks and pharses inputs to create a schedule object, and prints direct responses if the schedule is valid or not. This is meant to be used real time during the loop iteration
     public void addSchedule() {
         Scanner scheduleInputScanner = new Scanner(System.in);
-        logger.info("Please type the schedule request time in the following format: request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
+        logger.info("SCHEDULE REQUEST DATE TIME AND EMPLOYEE:");
+        logger.info("Please type the schedule request time in the following format: [request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
         logger.info("Example: 2011-03-16 09:28:23 EMP003 (please note that if you don't type 'EMP' at the beginning of the employee id, it will not be recognized)");
         
         //I prepare the values to create a schedule object
@@ -117,25 +114,27 @@ public class BookingManager {
 
         while (!firstLineIsValid) {
 
-            String input = scheduleInputScanner.nextLine();
+            String input = scheduleInputScanner.nextLine().trim();
 
             if(variousUtilities.validateFirstLineStringFormat(input)){ //Validation via regex
-                firstLineIsValid = true;
                 scheduleRequestDateTime = input.substring(0, 19); // Since the string is checked i can take the first part
                 scheduleEmployee = input.substring(20); //The rest of the string must be EMP###
-
+                
+                firstLineIsValid = true;
             } else {
+                logger.info("ERROR");
                 logger.info("Invalid input. Please, insert the schedule request time in the format YYYY-MM-DD HH:MM:SS EMP###");
             } 
-            scheduleInputScanner.nextLine();//Consume the remeaning input
         }
-
+        logger.info("SUCCES!");
         boolean secondLineIsValid = false;
 
+        logger.info("SCHEDULE START DATE AND DURATION:");
         logger.info("Please type the schedule starting time and duration in the following format:");
         logger.info("HHHH-MMM-DD HH:MM #  where the # is the duration in hours, example: '2011-03-22 14:00 2'");
+
         while (!secondLineIsValid) {
-            String input = scheduleInputScanner.nextLine();
+            String input = scheduleInputScanner.nextLine().trim();
 
             if(variousUtilities.validateSecondLineStringFormat(input)){
                 scheduleStartTime = input.substring(0, 16);
@@ -143,7 +142,6 @@ public class BookingManager {
                 secondLineIsValid = true;
             } else {
                 logger.info("Invalid input. Please, insert the schedule in the format YYYY-MM-DD HH:MM:SS EMP###");
-                scheduleInputScanner.nextLine();//Consume the remeaning input
             }
         }
 
@@ -168,7 +166,7 @@ public class BookingManager {
             }
 
         } else {
-            logger.info("The schedule is not valid because it's outside opening hours. Please, insert a valid schedule");
+            logger.info("The schedule is not valid because it's outside opening hours [" + this.officeOpeningTime + " - " + this.officeClosingTime + "]. Please, insert a valid schedule");
             return;
         }
     }

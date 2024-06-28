@@ -23,7 +23,8 @@ public class BookingCommandLineRunner implements CommandLineRunner {
         try (Scanner scanner = new Scanner(System.in)) {
             boolean running = true;
             while (running) {
-                logger.info("Please type a schedule, type 'INFO' to print schedules information or type 'EXIT' to shut down application");
+                logger.info("START MENU");
+                logger.info("Type INFO to print the schedules information, EXIT to shutdown, or type any other input to add a new schedule");
                 try {
                     String inputTyped = scanner.nextLine();
                                         
