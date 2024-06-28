@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -159,6 +160,7 @@ public class BookingManager {
             //check the schedule is not overlapping with other schedules
             if(!variousUtilities.checkScheduleConflicts(schedule, this.schedules)) {
                 this.schedules.add(schedule);
+                this.schedules.sort(Comparator.comparing(Schedule::getStartAt));//sort the schedules by start time every time
                 logger.info("The schedule has been added");
             } else {
                 logger.info("The schedule is overlapping with this schedule. Please, retry");
@@ -169,5 +171,16 @@ public class BookingManager {
             logger.info("The schedule is not valid because it's outside opening hours [" + this.officeOpeningTime + " - " + this.officeClosingTime + "]. Please, insert a valid schedule");
             return;
         }
+    }
+
+    //Override method to get the task expected output
+    @Override
+    public String toString() {
+        // LocalDateTime firsdDateTime = this.schedules.get(0).getStartAt();
+        String returnString = "";
+        for (Schedule schedule : this.schedules) {
+            returnString += schedule.toString() +"\n";
+        }
+        return returnString;
     }
 }
