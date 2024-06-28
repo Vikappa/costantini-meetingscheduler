@@ -1,6 +1,8 @@
 package vincenzo.costantini.Softinstigatetechtask.classes;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import lombok.Getter;
@@ -30,6 +32,28 @@ public class Schedule {
     public LocalDateTime getCalculatedEndAt() {
         //Calculate the end time by adding the duration to the startAt time
         return this.startAt.plusHours(this.duration);
+    }
+
+    //Turns LocaleDateTime to LocalTime to do confrontations
+    public LocalTime getStartHour() {
+        return this.startAt.toLocalTime();
+    }
+
+    //Turns LocaleDateTime to LocalTime to do confrontations
+    public LocalTime getEndHour() {
+        LocalDateTime endAt = this.startAt.plusHours(this.duration);
+        return endAt.toLocalTime();
+    }
+
+    //Turns LocaledDateTime to LocaleDate to do checks
+    public LocalDate getStartDate() {
+        return this.startAt.toLocalDate();
+    }
+
+    //Turns LocaledDateTime to LocaleDate to do checks
+    public LocalDate getEndDate() {
+        LocalDateTime endAt = this.startAt.plusHours(this.duration);
+        return endAt.toLocalDate();
     }
 
     @Override
