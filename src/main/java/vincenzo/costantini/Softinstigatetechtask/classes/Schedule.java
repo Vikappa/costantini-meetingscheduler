@@ -3,6 +3,9 @@ package vincenzo.costantini.Softinstigatetechtask.classes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import lombok.Getter;
+
+@Getter
 public class Schedule {
 
     private LocalDateTime bookedAt; // [request submission time, in the format YYYY-MM-DD HH:MM:SS]
@@ -24,6 +27,11 @@ public class Schedule {
         this.duration = duration;
     }
 
+    public LocalDateTime getCalculatedEndAt() {
+        //Calculate the end time by adding the duration to the startAt time
+        return this.startAt.plusHours(this.duration);
+    }
+
     @Override
     public String toString() {
         // Format start time
@@ -35,7 +43,7 @@ public class Schedule {
         // Format end time
         String endTimeFormatted = endAt.format(timeFormatter);
 
-        // Return the schedule object as request output from the task
+        // Return the schedule object as request output of the task
         return startTimeFormatted + " " + endTimeFormatted;
     }
 }
