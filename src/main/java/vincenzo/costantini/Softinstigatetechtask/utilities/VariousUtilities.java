@@ -82,6 +82,6 @@ public class VariousUtilities {
     // Check if the schedule is in the office hours
     //Checks if both start and ending hours are inside the office hours
     public boolean isScheduleInsideOfficeHours(LocalTime openingTime, LocalTime closingTime, Schedule schedule){
-        return (schedule.getStartHour().isAfter(openingTime) && schedule.getEndHour().isAfter(closingTime) && schedule.getStartHour().isBefore(closingTime) && schedule.getEndHour().isBefore(closingTime)); 
+        return (!schedule.getStartHour().isBefore(openingTime) && !schedule.getEndHour().isBefore(closingTime) && !schedule.getStartHour().isAfter(closingTime) && !schedule.getEndHour().isAfter(closingTime)); 
     }
 }
