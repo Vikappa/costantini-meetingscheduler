@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import vincenzo.costantini.Softinstigatetechtask.classes.Schedule;
 import vincenzo.costantini.Softinstigatetechtask.runners.BookingCommandLineRunner;
-import vincenzo.costantini.Softinstigatetechtask.services.BookingManager;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
