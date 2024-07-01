@@ -19,6 +19,9 @@ public class VariousUtilities {
 
     //Checks if the string is in the format YYYY-MM-DD HH:MM:SS EMP###
     public boolean validateFirstLineStringFormat(String input) {
+        if(input == null){
+            return false;
+        }
         // Regex pattern for the specified format: YYYY-MM-DD HH:MM:SS EMP###
         String regex = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} EMP\\d{3}";
 
@@ -30,6 +33,9 @@ public class VariousUtilities {
 
     //Checks if the string is in the format YYYY-MM-DD HH:MM d (d is the duration in hours)
     public boolean validateSecondLineStringFormat(String input) {
+        if(input == null){
+            return false;
+        }
         String regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2} \\d+$";
 
         Pattern pattern = Pattern.compile(regex);
@@ -40,6 +46,9 @@ public class VariousUtilities {
 
     //Checks if the time is typed in format #### #### for the first line input
     public boolean validateFirstLineTimeFormat(String input) {
+        if(input == null){
+            return false;
+        }
         String regex = "^\\d{2}\\d{2} \\d{2}\\d{2}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
