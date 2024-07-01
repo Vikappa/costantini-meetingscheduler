@@ -41,7 +41,7 @@ public class BookingManager {
         this.officeClosingTime = null;
     }
 
-    public void setWorkingHours(String line){
+    public void setWorkingHours(String line){ //tested
         if (variousUtilities.validateWorkingHoursLine(line)) {
             LocalTime openingTime = LocalTime.parse(line.substring(0, 4), DateTimeFormatter.ofPattern("HHmm"));
             LocalTime closingTime = LocalTime.parse(line.substring(5, 9), DateTimeFormatter.ofPattern("HHmm"));
@@ -58,53 +58,66 @@ public class BookingManager {
     }
 
     public void addSchedule(String firstLine, String secondLine) {
-        // Scanner scheduleInputScanner = new Scanner(System.in);
-        // logger.info("SCHEDULE REQUEST DATE TIME AND EMPLOYEE:");
-        // logger.info("Please type the schedule request time in the following format: [request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
-        // logger.info("Example: 2011-03-16 09:28:23 EMP003");
-
-        //i prepare schedule object arguments
+        // i prepare schedule object arguments
         String scheduleRequestDateTime = "";
         String scheduleEmployee = "";
         String scheduleStartTime = "";
         int scheduleDuration = 0;
-
-        //First input line verification and splitting
+    
+        // First input line verification and splitting
         firstLine = firstLine.trim();
-            if (variousUtilities.validateFirstLineStringFormat(firstLine)) {
-                scheduleRequestDateTime = firstLine.substring(0, 19);
-                scheduleEmployee = firstLine.substring(20);
-            } 
-
-        //Check if the request registration time is unique, if not exits method execution
-        LocalDateTime requestDateTime = LocalDateTime.parse(scheduleRequestDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        if (this.schedules.stream().anyMatch(sched -> sched.getBookedAt().equals(requestDateTime))) {
+        if (variousUtilities.validateFirstLineStringFormat(firstLine)) {
+            scheduleRequestDateTime = firstLine.substring(0, 19);
+            scheduleEmployee = firstLine.substring(20);
+        } else {
+            logger.error("Invalid format for the first line");
             return;
         }
-
+    
         secondLine = secondLine.trim();
-
-        //Second input line verification and splitting
+    
+        // Second input line verification and splitting
         if (variousUtilities.validateSecondLineStringFormat(secondLine)) {
             scheduleStartTime = secondLine.substring(0, 16);
             scheduleDuration = Integer.parseInt(secondLine.substring(17));
-        }   
-
-        //Since the prompt string were safe, i can parse the date and time
-        Schedule schedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
-
-        //Check whether the schedule is inside or outside of the office hours
-        if(!variousUtilities.isScheduleInsideOfficeHours(this.officeOpeningTime, this.officeClosingTime, schedule)) {
+        } else {
+            logger.error("Invalid format for the second line");
             return;
         }
-
-        //Check whether the schedule is overlapping with an other schedule
+    
+        // Since the prompt strings were safe, uses them to create a new schedule object
+        Schedule schedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
+    
+        // Check whether the schedule is inside or outside of the office hours
+        if (!variousUtilities.isScheduleInsideOfficeHours(this.officeOpeningTime, this.officeClosingTime, schedule)) {
+            return;
+        }
+    
+        // Check whether the schedule is overlapping with another schedule
         if (this.schedules.stream().anyMatch(sched -> variousUtilities.checkScheduleConflicts(this.schedules, schedule))) {
             return;
         }
-
-        
+    
+        // Check if the request registration time is unique, if the new line was scheduled before the previous one the newer will be removed, else it will not be added
+        boolean isUnique = true;
+        for (Schedule sched : this.schedules) {
+            if (sched.getBookedAt().equals(schedule.getBookedAt())) {
+                if (schedule.getBookedAt().isBefore(sched.getBookedAt())) {
+                    // Remove the older schedule if the new one is booked before
+                    this.schedules.remove(sched);
+                } else {
+                    // Newer schedule request time is not unique and didn't came before the registered one
+                    isUnique = false;
+                }
+                break;
+            }
+        }
+    
+        if (isUnique) {
+            this.schedules.add(schedule);
+        } 
     }
+    
 
     //Spicy tostring method
     @Override
@@ -134,79 +147,5 @@ public class BookingManager {
         });
 
         return returnString.toString();
-    }
-
-    //Method to paste a bulk schedule request 
-    public void addBulkSchedules() {
-        logger.info("Paste a bulk schedule requests in the following format:");
-        logger.info("YYYY-MM-DD HH:MM:SS EMP###");
-        logger.info("YYYY-MM-DD HH:MM #");
-        logger.info("After may be necessary to press enter twice.");
-
-        Scanner scanner = new Scanner(System.in);
-
-        //I read all the aivable lines
-        ArrayList<String> lines = new ArrayList<>();
-        while (true) {
-            String line = scanner.nextLine().trim();
-            if (line.isEmpty()) {
-                break;
-            }
-            lines.add(line);
-        }
-
-        //I create a list of schedule objects to parse
-        ArrayList<Schedule> requestList = new ArrayList<>();
-
-        //I parse the lines and add them to the list. If the line format is invalid its skipped
-        for (int i = 0; i < lines.size(); i++) {
-            try {
-                if (variousUtilities.validateFirstLineStringFormat(lines.get(i)) && variousUtilities.validateSecondLineStringFormat(lines.get(i + 1))) {
-                    //both checks are valid, create and add the new schedule to the list
-                    Schedule schedule = new Schedule(
-                        lines.get(i).substring(0, 19), 
-                        lines.get(i).substring(20),
-                        lines.get(i + 1).substring(0, 16),
-                        Integer.parseInt(lines.get(i + 1).substring(17))
-                    );
-                    requestList.add(schedule);
-                    logger.info("Line checked: " + lines.get(i) + " and " + lines.get(i+1) + " are valid.");
-                    i++; // Skip the next line as it's already processed
-                }
-            } catch(Exception e) {
-                logger.info("Line checked: " + lines.get(i) + " is invalid.");
-            }
-        }
-
-        //Sort the list by the request registration date
-        requestList.sort(Comparator.comparing(Schedule::getBookedAt));
-        logger.info("Inserting valid schedules...");
-
-        //Check the schedule and add it to the list if it's valid
-        for (Schedule schedule : requestList) {
-            LocalTime startHour = schedule.getStartHour();
-            LocalTime endHour = schedule.getEndHour();
-
-            if (startHour.isBefore(officeOpeningTime) || endHour.isAfter(officeClosingTime)) {
-                logger.info("The schedule is outside of the office opening hours. Not inserted.");
-                continue;
-            }
-
-            if (this.schedules.stream().anyMatch(sched -> sched.getBookedAt().equals(schedule.getBookedAt()))) {
-                logger.info("The schedule request time is not unique. Not inserted.");
-                continue;
-            }
-
-            if (!variousUtilities.checkScheduleConflicts(schedule, this.schedules)) {
-                this.schedules.add(schedule);
-                this.schedules.sort(Comparator.comparing(Schedule::getStartAt));
-                logger.info("The schedule has been added.");
-            } else {
-                logger.info("The schedule is overlapping with another schedule. Not inserted.");
-            }
-        }
-
-        logger.info("OUTPUT");
-        logger.info(this.toString());
     }
 }
