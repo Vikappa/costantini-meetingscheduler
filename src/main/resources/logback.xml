@@ -22,4 +22,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
+    <logger name="vincenzo.costantini.Softinstigatetechtask.services.BookingManagerTests" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
 </configuration>
