@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -42,12 +41,27 @@ public class BookingManager {
         this.officeClosingTime = null;
     }
 
+    public void setWorkingHours(String line){
+        if (variousUtilities.validateWorkingHoursLine(line)) {
+            LocalTime openingTime = LocalTime.parse(line.substring(0, 4), DateTimeFormatter.ofPattern("HHmm"));
+            LocalTime closingTime = LocalTime.parse(line.substring(5, 9), DateTimeFormatter.ofPattern("HHmm"));
+            if (openingTime.isBefore(closingTime)) {
+                this.officeOpeningTime = openingTime;
+                this.officeClosingTime = closingTime;
+                logger.info("Working hours set to: " + openingTime + " - " + closingTime);
+            } else {
+                logger.error("The closing time must be after the opening time.");
+            }
+        } else{
+            logger.error("The input is not in the correct format. Please type the working hours in the following format: HHmm HHmm.");
+        }
+    }
 
-    public void addSchedule() {
-        Scanner scheduleInputScanner = new Scanner(System.in);
-        logger.info("SCHEDULE REQUEST DATE TIME AND EMPLOYEE:");
-        logger.info("Please type the schedule request time in the following format: [request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
-        logger.info("Example: 2011-03-16 09:28:23 EMP003");
+    public void addSchedule(String firstLine, String secondLine) {
+        // Scanner scheduleInputScanner = new Scanner(System.in);
+        // logger.info("SCHEDULE REQUEST DATE TIME AND EMPLOYEE:");
+        // logger.info("Please type the schedule request time in the following format: [request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]");
+        // logger.info("Example: 2011-03-16 09:28:23 EMP003");
 
         //i prepare schedule object arguments
         String scheduleRequestDateTime = "";
@@ -55,47 +69,24 @@ public class BookingManager {
         String scheduleStartTime = "";
         int scheduleDuration = 0;
 
-        boolean firstLineIsValid = false;
-
         //i ask for the first line of the schedule until a valid format is typed
-        while (!firstLineIsValid) {
-            String input = scheduleInputScanner.nextLine().trim();
-            if (variousUtilities.validateFirstLineStringFormat(input)) {
-                scheduleRequestDateTime = input.substring(0, 19);
-                scheduleEmployee = input.substring(20);
-                firstLineIsValid = true;
-            } else {
-                logger.info("ERROR");
-                logger.info("Invalid input. Please, insert the schedule request time in the format YYYY-MM-DD HH:MM:SS EMP###");
-            }
-        }
+        firstLine = firstLine.trim();
+            if (variousUtilities.validateFirstLineStringFormat(firstLine)) {
+                scheduleRequestDateTime = firstLine.substring(0, 19);
+                scheduleEmployee = firstLine.substring(20);
+            } 
 
-        //Check if the request registration time is unique
+        //Check if the request registration time is unique, if not exits method execution
         LocalDateTime requestDateTime = LocalDateTime.parse(scheduleRequestDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (this.schedules.stream().anyMatch(sched -> sched.getBookedAt().equals(requestDateTime))) {
-            logger.info("ERROR");
-            logger.info("The schedule request time is not unique. Please, insert a different time");
             return;
         }
 
-        logger.info("SUCCESS!");
-        boolean secondLineIsValid = false;
-
-        logger.info("SCHEDULE START DATE AND DURATION:");
-        logger.info("Please type the schedule starting time and duration in the following format:");
-        logger.info("YYYY-MM-DD HH:MM #");
-
-        //i ask for the second line of the schedule until a valid format is typed
-        while (!secondLineIsValid) {
-            String input = scheduleInputScanner.nextLine().trim();
-            if (variousUtilities.validateSecondLineStringFormat(input)) {
-                scheduleStartTime = input.substring(0, 16);
-                scheduleDuration = Integer.parseInt(input.substring(17));
-                secondLineIsValid = true;
-            } else {
-                logger.info("Invalid input. Please, insert the schedule in the format YYYY-MM-DD HH:MM:SS EMP###");
-            }
-        }
+        secondLine = secondLine.trim();
+        if (variousUtilities.validateSecondLineStringFormat(secondLine)) {
+            scheduleStartTime = secondLine.substring(0, 16);
+            scheduleDuration = Integer.parseInt(secondLine.substring(17));
+        }   
 
         //Since the prompt string were safe, i can parse the date and time
         Schedule schedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
