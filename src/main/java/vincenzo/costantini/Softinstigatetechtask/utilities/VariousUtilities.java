@@ -38,6 +38,14 @@ public class VariousUtilities {
         return matcher.matches();
     }
 
+    //Checks if the time is typed in format HHmm HHmm for the first line input
+    public boolean validateFirstLineTimeFormat(String input) {
+        String regex = "^\\d{2}:\\d{2} \\d{2}:\\d{2}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
     //checks if any of the schedules in the list has a conflict with the new one
     public boolean checkScheduleConflicts(Schedule schedule, ArrayList<Schedule> schedules) {
         return schedules.stream().anyMatch(existingSchedule -> hasConflict(schedule, existingSchedule));
