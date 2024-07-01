@@ -33,6 +33,6 @@ public class BookingManagerTests {
 
         bookingManager.setWorkingHours("0900 1730");
         logger.info(bookingManager.getOfficeOpeningTime().toString());
-        // assertTrue(bookingManager.getOfficeOpeningTime()!= null && bookingManager.getOfficeClosingTime()!= null);
+        assertTrue(bookingManager.getOfficeOpeningTime()!= null && bookingManager.getOfficeClosingTime()!= null);
     }
 }
