@@ -50,4 +50,20 @@ public class UtilityTests {
         assertFalse(variousUtilities.validateSecondLineStringFormat("2011-03-21 09:00 two"));
         assertFalse(variousUtilities.validateSecondLineStringFormat(null));
     }
+
+    @Test // CHECKS SCHEDULE CONFLICTS
+    void test_checkScheduleConflicts(){
+        // Create and add 2 schedules which do not conflict
+        ArrayList<Schedule> schedules = new ArrayList<>();
+        schedules.add(new Schedule("2011-03-16 09:00:00", "EMP001", "2011-03-21 09:00", 2)); 
+        schedules.add(new Schedule("2011-03-17 10:00:00", "EMP002", "2011-03-21 11:00", 2));
+
+        // New schedule that conflicts with the first one
+        Schedule newSchedule1 = new Schedule("2011-03-18 09:00:00", "EMP003", "2011-03-21 10:00", 1);
+        // New schedule that does not conflict with any existing schedule
+        Schedule newSchedule2 = new Schedule("2011-03-18 09:00:00", "EMP004", "2012-03-21 13:00", 1);
+
+        assertTrue(variousUtilities.checkScheduleConflicts(schedules, newSchedule1)); // conflict expected
+        assertFalse(variousUtilities.checkScheduleConflicts(schedules, newSchedule2)); // no conflict expected
+    }
 }
