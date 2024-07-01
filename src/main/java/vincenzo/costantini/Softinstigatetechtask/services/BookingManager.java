@@ -43,8 +43,8 @@ public class BookingManager {
 
     public void setWorkingHours(String line){ //tested
         if (variousUtilities.validateWorkingHoursLine(line)) {
-            LocalTime openingTime = LocalTime.parse(line.substring(0, 4), DateTimeFormatter.ofPattern("HHmm"));
-            LocalTime closingTime = LocalTime.parse(line.substring(5, 9), DateTimeFormatter.ofPattern("HHmm"));
+            LocalTime openingTime = LocalTime.parse(line.substring(0, 3), DateTimeFormatter.ofPattern("HHmm"));
+            LocalTime closingTime = LocalTime.parse(line.substring(5, 8), DateTimeFormatter.ofPattern("HHmm"));
             if (openingTime.isBefore(closingTime)) {
                 this.officeOpeningTime = openingTime;
                 this.officeClosingTime = closingTime;
