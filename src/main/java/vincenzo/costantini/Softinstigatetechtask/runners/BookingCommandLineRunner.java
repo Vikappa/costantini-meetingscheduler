@@ -42,6 +42,7 @@ public class BookingCommandLineRunner implements CommandLineRunner {
 
             if(variousUtilities.validateWorkingHoursLine(allLines.get(0))){//If the First line is valid the rest will be processed
                 for (int i = 1; i < args.length; i++) {
+                    bookingManager.setWorkingHours(allLines.get(i));
                     //Try to add all the lines, but only the first line of the schelude process will be validated
                     
                     bookingManager.addSchedule(allLines.get(i), allLines.get(i+1));
