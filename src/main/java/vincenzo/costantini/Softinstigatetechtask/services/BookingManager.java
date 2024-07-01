@@ -69,7 +69,7 @@ public class BookingManager {
         String scheduleStartTime = "";
         int scheduleDuration = 0;
 
-        //i ask for the first line of the schedule until a valid format is typed
+        //First input line verification and splitting
         firstLine = firstLine.trim();
             if (variousUtilities.validateFirstLineStringFormat(firstLine)) {
                 scheduleRequestDateTime = firstLine.substring(0, 19);
@@ -83,6 +83,8 @@ public class BookingManager {
         }
 
         secondLine = secondLine.trim();
+
+        //Second input line verification and splitting
         if (variousUtilities.validateSecondLineStringFormat(secondLine)) {
             scheduleStartTime = secondLine.substring(0, 16);
             scheduleDuration = Integer.parseInt(secondLine.substring(17));
@@ -91,20 +93,17 @@ public class BookingManager {
         //Since the prompt string were safe, i can parse the date and time
         Schedule schedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
 
-        //Check whether the schedule is overlapping or outside of the office hours
-        if (!schedule.getStartHour().isBefore(officeOpeningTime) && !schedule.getStartHour().isAfter(officeClosingTime) && schedule.getEndHour().isAfter(officeOpeningTime) && !schedule.getEndHour().isAfter(officeClosingTime)) {
-            if (!variousUtilities.checkScheduleConflicts(schedule, this.schedules)) {
-                this.schedules.add(schedule);
-                this.schedules.sort(Comparator.comparing(Schedule::getStartAt));
-                logger.info("The schedule has been added");
-            } else {
-                logger.info("The schedule is overlapping with another schedule. Please, retry");
-                return;
-            }
-        } else {
-            logger.info("The schedule is not valid because it's outside opening hours [" + this.officeOpeningTime + " - " + this.officeClosingTime + "]. Please, insert a valid schedule");
+        //Check whether the schedule is inside or outside of the office hours
+        if(!variousUtilities.isScheduleInsideOfficeHours(this.officeOpeningTime, this.officeClosingTime, schedule)) {
             return;
         }
+
+        //Check whether the schedule is overlapping with an other schedule
+        if (this.schedules.stream().anyMatch(sched -> variousUtilities.checkScheduleConflicts(this.schedules, schedule))) {
+            return;
+        }
+
+        
     }
 
     //Spicy tostring method
