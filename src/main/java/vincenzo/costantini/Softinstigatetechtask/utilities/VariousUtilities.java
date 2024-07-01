@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import vincenzo.costantini.Softinstigatetechtask.classes.Schedule;
 import vincenzo.costantini.Softinstigatetechtask.runners.BookingCommandLineRunner;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
@@ -50,6 +52,16 @@ public class VariousUtilities {
             return false;
         }
         String regex = "^\\d{2}\\d{2} \\d{2}\\d{2}$";
+
+        try {
+            LocalTime openingTime = LocalTime.parse(input.substring(0, 4), DateTimeFormatter.ofPattern("HHmm"));
+            LocalTime closingTime = LocalTime.parse(input.substring(5, 9), DateTimeFormatter.ofPattern("HHmm"));
+        } catch (Exception e) {
+            //The time is not in the correct format (example: 12:78 is an impossible hours)
+
+            return false;
+        }
+
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
