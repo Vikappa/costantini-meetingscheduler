@@ -45,7 +45,7 @@ public class VariousUtilities {
     }
 
     //Checks if the time is typed in format #### #### for the first line input
-    public boolean validateFirstLineTimeFormat(String input) {
+    public boolean validateWorkingHoursLine(String input) {
         if(input == null){
             return false;
         }
