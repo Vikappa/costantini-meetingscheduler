@@ -3,6 +3,8 @@ package Softinstigatetechtask.utilities;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
@@ -65,5 +67,21 @@ public class UtilityTests {
 
         assertTrue(variousUtilities.checkScheduleConflicts(schedules, newSchedule1)); // conflict expected
         assertFalse(variousUtilities.checkScheduleConflicts(schedules, newSchedule2)); // no conflict expected
+    }
+
+    @Test // CHECKS IF SCHEDULE IS INSIDE OFFICE HOURS
+    void test_isScheduleInsideOfficeHours(){
+        LocalTime openingTime = LocalTime.parse("09:00", DateTimeFormatter.ofPattern("HH:mm"));
+        LocalTime closingTime = LocalTime.parse("17:00", DateTimeFormatter.ofPattern("HH:mm"));
+
+        Schedule schedule1 = new Schedule("2011-03-16 09:00:00", "EMP001", "2011-03-21 09:00", 2); // Inside office hours
+        Schedule schedule2 = new Schedule("2011-03-16 08:00:00", "EMP002", "2011-03-21 08:00", 2); // Outside office hours
+        Schedule schedule3 = new Schedule("2011-03-16 09:00:00", "EMP003", "2011-03-21 16:00", 2); // End outside office hours
+        Schedule schedule4 = new Schedule("2011-03-16 09:00:00", "EMP004", "2011-03-21 18:00", 2); // Start outside office hours
+
+        assertTrue(variousUtilities.isScheduleInsideOfficeHours(openingTime, closingTime, schedule1));
+        assertFalse(variousUtilities.isScheduleInsideOfficeHours(openingTime, closingTime, schedule2));
+        assertFalse(variousUtilities.isScheduleInsideOfficeHours(openingTime, closingTime, schedule3));
+        assertFalse(variousUtilities.isScheduleInsideOfficeHours(openingTime, closingTime, schedule4));
     }
 }

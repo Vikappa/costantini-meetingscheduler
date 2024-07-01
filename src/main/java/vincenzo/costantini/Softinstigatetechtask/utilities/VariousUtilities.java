@@ -78,10 +78,10 @@ public class VariousUtilities {
         return schedule1.getStartAt().isBefore(schedule2.getCalculatedEndAt()) && 
                schedule1.getCalculatedEndAt().isAfter(schedule2.getStartAt());
     }
-    
-    // Check if the schedule is in the office hours
-    //Checks if both start and ending hours are inside the office hours
-    public boolean isScheduleInsideOfficeHours(LocalTime openingTime, LocalTime closingTime, Schedule schedule){
-        return (!schedule.getStartHour().isBefore(openingTime) && !schedule.getEndHour().isBefore(closingTime) && !schedule.getStartHour().isAfter(closingTime) && !schedule.getEndHour().isAfter(closingTime)); 
+    public boolean isScheduleInsideOfficeHours(LocalTime openingTime, LocalTime closingTime, Schedule schedule) {
+        // Check if the schedule's start and end times are within the office hours
+        return (!schedule.getStartHour().isBefore(openingTime) && 
+                !schedule.getEndHour().isAfter(closingTime));
     }
+    
 }
