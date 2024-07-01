@@ -57,6 +57,9 @@ public class BookingManager {
         }
     }
 
+
+    //This method checks all the conditions to add a new schedule to the list of schedules
+    //if the condition are not met the schedule is not added but execution is not interrupted
     public void addSchedule(String firstLine, String secondLine) {
         // i prepare schedule object arguments
         String scheduleRequestDateTime = "";
