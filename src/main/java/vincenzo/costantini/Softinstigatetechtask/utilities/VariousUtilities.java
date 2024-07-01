@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import vincenzo.costantini.Softinstigatetechtask.classes.Schedule;
 import vincenzo.costantini.Softinstigatetechtask.runners.BookingCommandLineRunner;
+import vincenzo.costantini.Softinstigatetechtask.services.BookingManager;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -68,17 +69,21 @@ public class VariousUtilities {
     }
 
     //checks if any of the schedules in the list has a conflict with the new one
-    public boolean checkScheduleConflicts(Schedule schedule, ArrayList<Schedule> schedules) {
+    public boolean checkScheduleConflicts(ArrayList<Schedule> schedules, Schedule schedule) {
         return schedules.stream().anyMatch(existingSchedule -> hasConflict(schedule, existingSchedule));
     }
     
     // This is a helper method that defines the conflict condition
     private boolean hasConflict(Schedule schedule1, Schedule schedule2) {
-        logger.info("Checking if {} has a conflict with {}", schedule1, schedule2);
         return schedule1.getStartAt().isBefore(schedule2.getCalculatedEndAt()) && 
                schedule1.getCalculatedEndAt().isAfter(schedule2.getStartAt());
     }
     
+    // Check if the schedule is in the office hours
+    public boolean isScheduleInsideOfficeHours(LocalTime openingTime, LocalTime closingTime, Schedule schedule){
+        return (schedule.getStartHour().isAfter(openingTime) && schedule.getEndHour().isAfter(closingTime) && schedule.getStartHour().isBefore(closingTime) && schedule.getEndHour().isBefore(closingTime)); 
+    }
+
     
 
 }
