@@ -40,7 +40,7 @@ public class VariousUtilities {
 
     //Checks if the time is typed in format #### #### for the first line input
     public boolean validateFirstLineTimeFormat(String input) {
-        String regex = "^\\d{2}:\\d{2} \\d{2}:\\d{2}$";
+        String regex = "^\\d{2}\\d{2} \\d{2}\\d{2}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
