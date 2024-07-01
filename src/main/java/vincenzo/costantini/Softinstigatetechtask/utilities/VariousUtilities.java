@@ -84,7 +84,4 @@ public class VariousUtilities {
     public boolean isScheduleInsideOfficeHours(LocalTime openingTime, LocalTime closingTime, Schedule schedule){
         return (schedule.getStartHour().isAfter(openingTime) && schedule.getEndHour().isAfter(closingTime) && schedule.getStartHour().isBefore(closingTime) && schedule.getEndHour().isBefore(closingTime)); 
     }
-
-    
-
 }

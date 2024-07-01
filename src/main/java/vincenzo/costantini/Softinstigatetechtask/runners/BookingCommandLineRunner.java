@@ -26,7 +26,7 @@ public class BookingCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try (Scanner scanner = new Scanner(System.in)) {
-            logger.info("Paste input and press ENTER. Type 'END' and press ENTER.");
+            logger.info("Paste input and press ENTER.");
             ArrayList<String> allLines = new ArrayList<>();
         
             while (scanner.hasNextLine()) {//loop untile all the lines are read
@@ -43,6 +43,7 @@ public class BookingCommandLineRunner implements CommandLineRunner {
             if(variousUtilities.validateWorkingHoursLine(allLines.get(0))){//If the First line is valid the rest will be processed
                 for (int i = 1; i < args.length; i++) {
                     //Try to add all the lines, but only the first line of the schelude process will be validated
+                    
                     bookingManager.addSchedule(allLines.get(i), allLines.get(i+1));
                 }
             }
