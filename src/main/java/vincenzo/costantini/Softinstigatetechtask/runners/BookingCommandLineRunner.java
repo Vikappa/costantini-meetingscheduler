@@ -19,46 +19,10 @@ public class BookingCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Until explicit shutdown request, this method will ask the user to input a new schedule o print the schedules informations
+        
         try (Scanner scanner = new Scanner(System.in)) {
-            boolean running = true;
-            while (running) {
-                logger.info("START MENU");
-                logger.info("Type INFO to print the schedules information");
-                logger.info("Type EXIT to shutdown");
-                logger.info("Type BULK to paste a bulk of schedules");
-                logger.info("Type any other word to add a new schedule");
-                logger.info("(No, litterally, everything except EXIT, INFO and BULK will be considered as a new schedule request, also 'BATMAN')");
-                try {
-                    String inputTyped = scanner.nextLine();
-                                        
-                    switch (inputTyped) {
-                        case "EXIT":
-                            running = false;
-                            logger.info("Shutting down the application...");
-                            System.exit(0);
-                        case "INFO":
-                            logger.info(bookingManager.toString());
-                            break;
-                        case "BULK":
-                        try {
-                            bookingManager.addBulkSchedules();
-                        } catch (Exception e) {
-                            logger.error("Schedule was not registered", e);
-                        }
-                        break;
-                        default:
-                            try {
-                                bookingManager.addSchedule();
-                            } catch (Exception e) {
-                                logger.error("Schedule was not registered", e);
-                            }
-                            break;
-                    }
-                } catch (Exception e) {
-                    logger.error("An error occurred while reading input.", e);
-                }
-            }
+            logger.info("Paste input and press ENTER");
+
         } catch (Exception e) {
             logger.error("An error occurred while processing input.", e);
         }
