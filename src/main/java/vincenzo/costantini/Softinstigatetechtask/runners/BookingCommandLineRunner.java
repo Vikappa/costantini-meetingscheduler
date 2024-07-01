@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import vincenzo.costantini.Softinstigatetechtask.services.BookingManager;
+import vincenzo.costantini.Softinstigatetechtask.utilities.VariousUtilities;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -19,9 +20,11 @@ public class BookingCommandLineRunner implements CommandLineRunner {
     @Autowired
     private BookingManager bookingManager;
 
+    @Autowired
+    private VariousUtilities variousUtilities;
+
     @Override
     public void run(String... args) throws Exception {
-        StringBuilder allInput = new StringBuilder();
         try (Scanner scanner = new Scanner(System.in)) {
             logger.info("Paste input and press ENTER. Type 'END' and press ENTER.");
             ArrayList<String> allLines = new ArrayList<>();
@@ -36,17 +39,20 @@ public class BookingCommandLineRunner implements CommandLineRunner {
             
             scanner.close();
         
-            //print the input for verification
-            for (String line : allLines) {
-                logger.info(line+"\n");
+
+            if(variousUtilities.validateWorkingHoursLine(allLines.get(0))){//If the First line is valid the rest will be processed
+                for (int i = 1; i < args.length; i++) {
+                    //Try to add all the lines, but only the first line of the schelude process will be validated
+                    bookingManager.addSchedule(allLines.get(i), allLines.get(i+1));
+                }
             }
+
+            logger.info("OUTPUT");
+            logger.info(bookingManager.toString());
+
 
         } catch (Exception e) {
             logger.error("An error occurred while processing input.", e);
         }
-
-        // Output the final string to verify
-        String result = allInput.toString();
-        logger.info("Captured Input:\n" + result);
     }
 }
