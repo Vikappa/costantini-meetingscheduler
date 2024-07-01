@@ -38,55 +38,10 @@ public class BookingManager {
 
     public BookingManager() {
         this.schedules = new ArrayList<Schedule>();
-        this.askOfficeOpeningTime(); // THIS METHOD TRIGGERS A COMMAND LINE INPUT AND FINALIZES THE OBJECT
+        this.officeOpeningTime = null;
+        this.officeClosingTime = null;
     }
 
-    private void askOfficeOpeningTime() {
-        boolean validOpening = false;
-        boolean validClosing = false;
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        Scanner openingTimeScanner = new Scanner(System.in);
-
-        LocalTime openingHour = null;
-        LocalTime closingHour = null;
-
-        logger.info("-------------------------------------------------------------------------------------");
-
-        //This loops asks for the office opening time until a valid time is inserted.
-        while (!validOpening) {
-            logger.info("Please, insert office opening time in the format HH:MM");
-            String input = openingTimeScanner.nextLine();
-            try {
-                openingHour = LocalTime.parse(input, timeFormatter);
-                this.officeOpeningTime = openingHour;
-                logger.info("-------------------------------------------------------------------------------------");
-                validOpening = true;
-            } catch (DateTimeParseException e) {
-                logger.warn("Invalid input. Please, insert the opening time in the format HH:MM");
-            }
-        }
-
-        //This loops asks for the office closing time until a valid time is inserted.
-        while (!validClosing) {
-            logger.info("Please, insert office closing time in the format HH:MM");
-            String input = openingTimeScanner.nextLine();
-            try {
-                closingHour = LocalTime.parse(input, timeFormatter);
-                if (closingHour.isBefore(this.officeOpeningTime)) {
-                    logger.warn("The closing time must be after the opening time");
-                } else {
-                    this.officeClosingTime = closingHour;
-                    validClosing = true;
-                }
-            } catch (DateTimeParseException e) {
-                logger.warn("Invalid input. Please, insert the opening time in the format HH:MM");
-            }
-        }
-
-        //Checking method results
-        logger.info("Opening time set: " + this.officeOpeningTime + " Closing time set: " + this.officeClosingTime);
-        logger.info("The office is supposed to be open for " + (this.officeClosingTime.getHour() - this.officeOpeningTime.getHour()) + " hours");
-    }
 
     public void addSchedule() {
         Scanner scheduleInputScanner = new Scanner(System.in);
