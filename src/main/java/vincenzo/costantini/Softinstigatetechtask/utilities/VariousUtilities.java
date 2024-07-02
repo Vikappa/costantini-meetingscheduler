@@ -10,7 +10,6 @@ import vincenzo.costantini.Softinstigatetechtask.classes.Schedule;
 import vincenzo.costantini.Softinstigatetechtask.runners.BookingCommandLineRunner;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
@@ -48,24 +47,21 @@ public class VariousUtilities {
 
     //Checks if the time is typed in format #### #### for the first line input
     public boolean validateWorkingHoursLine(String input) {
-        if(input == null){
+        if(input == null || input.length() != 9){
             return false;
         }
-        String regex = "^\\d{2}\\d{2} \\d{2}\\d{2}$";
-
-        try {
-            LocalTime openingTime = LocalTime.parse(input.substring(0, 4), DateTimeFormatter.ofPattern("HHmm"));
-            LocalTime closingTime = LocalTime.parse(input.substring(5, 9), DateTimeFormatter.ofPattern("HHmm"));
-        } catch (Exception e) {
-            //The time is not in the correct format (example: 12:78 is an impossible hours)
-
-            return false;
-        }
-
+        
+        String regex = "^\\d{4} \\d{4}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
-        return matcher.matches();
+    
+        if(!matcher.matches()){
+            return false;
+        }
+    
+        return true;
     }
+    
 
     //checks if any of the schedules in the list has a conflict with the new one
     public boolean checkScheduleConflicts(ArrayList<Schedule> schedules, Schedule schedule) {

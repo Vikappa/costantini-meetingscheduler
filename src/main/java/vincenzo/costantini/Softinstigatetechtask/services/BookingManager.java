@@ -41,39 +41,37 @@ public class BookingManager {
         this.officeClosingTime = null;
     }
 
-    public void setWorkingHours(String line){ //tested
-        if (variousUtilities.validateWorkingHoursLine(line)) {
-            LocalTime openingTime = LocalTime.parse(line.substring(0, 3), DateTimeFormatter.ofPattern("HHmm"));
-            LocalTime closingTime = LocalTime.parse(line.substring(5, 8), DateTimeFormatter.ofPattern("HHmm"));
+    public void setWorkingHours(String line){ 
+        if (variousUtilities.validateWorkingHoursLine(line.trim())) {
+            LocalTime openingTime = LocalTime.parse(line.substring(0, 4), DateTimeFormatter.ofPattern("HHmm"));
+            LocalTime closingTime = LocalTime.parse(line.substring(5, 9), DateTimeFormatter.ofPattern("HHmm"));
+
             if (openingTime.isBefore(closingTime)) {
                 this.officeOpeningTime = openingTime;
                 this.officeClosingTime = closingTime;
-                logger.info("Working hours set to: " + openingTime + " - " + closingTime);
-            } else {
-                logger.error("The closing time must be after the opening time.");
-            }
-        } else{
-            logger.error("The input is not in the correct format. Please type the working hours in the following format: HHmm HHmm.");
-        }
+            } 
+        } 
     }
 
 
     //This method checks all the conditions to add a new schedule to the list of schedules
-    //if the condition are not met the schedule is not added but execution is not interrupted
+    //if the condition are not met the schedule is not added but execution is not
     public void addSchedule(String firstLine, String secondLine) {
-        // i prepare schedule object arguments
+
+        // Prepare schedule object arguments
         String scheduleRequestDateTime = "";
         String scheduleEmployee = "";
         String scheduleStartTime = "";
         int scheduleDuration = 0;
+    
     
         // First input line verification and splitting
         firstLine = firstLine.trim();
         if (variousUtilities.validateFirstLineStringFormat(firstLine)) {
             scheduleRequestDateTime = firstLine.substring(0, 19);
             scheduleEmployee = firstLine.substring(20);
+            logger.debug("First line validated: " + scheduleRequestDateTime + ", " + scheduleEmployee);
         } else {
-            logger.error("Invalid format for the first line");
             return;
         }
     
@@ -83,8 +81,8 @@ public class BookingManager {
         if (variousUtilities.validateSecondLineStringFormat(secondLine)) {
             scheduleStartTime = secondLine.substring(0, 16);
             scheduleDuration = Integer.parseInt(secondLine.substring(17));
+            logger.debug("Second line validated: " + scheduleStartTime + ", duration: " + scheduleDuration);
         } else {
-            logger.error("Invalid format for the second line");
             return;
         }
     
@@ -94,12 +92,13 @@ public class BookingManager {
         // Check whether the schedule is inside or outside of the office hours
         if (!variousUtilities.isScheduleInsideOfficeHours(this.officeOpeningTime, this.officeClosingTime, schedule)) {
             return;
-        }
+        } 
     
         // Check whether the schedule is overlapping with another schedule
-        if (this.schedules.stream().anyMatch(sched -> variousUtilities.checkScheduleConflicts(this.schedules, schedule))) {
+        boolean conflict = this.schedules.stream().anyMatch(sched -> variousUtilities.checkScheduleConflicts(this.schedules, schedule));
+        if (conflict) {
             return;
-        }
+        } 
     
         // Check if the request registration time is unique, if the new line was scheduled before the previous one the newer will be removed, else it will not be added
         boolean isUnique = true;
@@ -115,11 +114,17 @@ public class BookingManager {
                 break;
             }
         }
+
+
     
         if (isUnique) {
             this.schedules.add(schedule);
-        } 
+        } else {
+        }
     }
+    
+    
+    
     
 
     //Spicy tostring method
@@ -130,7 +135,6 @@ public class BookingManager {
         }
 
         StringBuilder returnString = new StringBuilder();
-        returnString.append("SCHEDULES:\n");
 
         HashSet<LocalDate> hashsetDate = new HashSet<>();
         this.schedules.forEach(schedule -> {
