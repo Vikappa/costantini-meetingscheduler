@@ -57,13 +57,11 @@ public class BookingManager {
     //This method checks all the conditions to add a new schedule to the list of schedules
     //if the condition are not met the schedule is not added but execution is not
     public void addSchedule(String firstLine, String secondLine) {
-
         // Prepare schedule object arguments
         String scheduleRequestDateTime = "";
         String scheduleEmployee = "";
         String scheduleStartTime = "";
         int scheduleDuration = 0;
-    
     
         // First input line verification and splitting
         firstLine = firstLine.trim();
@@ -86,42 +84,38 @@ public class BookingManager {
             return;
         }
     
-        // Since the prompt strings were safe, uses them to create a new schedule object
-        Schedule schedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
+        // Create a new schedule object
+        Schedule newSchedule = new Schedule(scheduleRequestDateTime, scheduleEmployee, scheduleStartTime, scheduleDuration);
     
-        // Check whether the schedule is inside or outside of the office hours
-        if (!variousUtilities.isScheduleInsideOfficeHours(this.officeOpeningTime, this.officeClosingTime, schedule)) {
+        // Check if the schedule is within office hours
+        if (!variousUtilities.isScheduleInsideOfficeHours(this.officeOpeningTime, this.officeClosingTime, newSchedule)) {
             return;
-        } 
+        }
     
-        // Check whether the schedule is overlapping with another schedule
-        boolean conflict = this.schedules.stream().anyMatch(sched -> variousUtilities.checkScheduleConflicts(this.schedules, schedule));
-        if (conflict) {
-            return;
-        } 
-    
-        // Check if the request registration time is unique, if the new line was scheduled before the previous one the newer will be removed, else it will not be added
-        boolean isUnique = true;
-        for (Schedule sched : this.schedules) {
-            if (sched.getBookedAt().equals(schedule.getBookedAt())) {
-                if (schedule.getBookedAt().isBefore(sched.getBookedAt())) {
-                    // Remove the older schedule if the new one is booked before
-                    this.schedules.remove(sched);
+        // Find and replace an existing schedule if necessary
+        Schedule scheduleToReplace = null;
+        for (Schedule existingSchedule : this.schedules) {
+            if (existingSchedule.getStartAt().equals(newSchedule.getStartAt())) {
+                // If the new schedule has an earlier bookedAt time, mark the existing schedule for replacement
+                if (newSchedule.getBookedAt().isBefore(existingSchedule.getBookedAt())) {
+                    scheduleToReplace = existingSchedule;
+                    break;
                 } else {
-                    // Newer schedule request time is not unique and didn't came before the registered one
-                    isUnique = false;
+                    // If the existing schedule has an earlier bookedAt time, do not add the new schedule
+                    return;
                 }
-                break;
             }
         }
-
-
     
-        if (isUnique) {
-            this.schedules.add(schedule);
-        } else {
+        // Replace the schedule if one was found to replace (outside for loops to avoid errors)
+        if (scheduleToReplace != null) {
+            this.schedules.remove(scheduleToReplace);
         }
+    
+        // Add the new schedule
+        this.schedules.add(newSchedule);
     }
+    
     
     
     
