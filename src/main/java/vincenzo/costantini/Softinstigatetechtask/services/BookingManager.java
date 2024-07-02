@@ -115,10 +115,7 @@ public class BookingManager {
         // Add the new schedule
         this.schedules.add(newSchedule);
     }
-    
-    
-    
-    
+
     
 
     //Spicy tostring method
