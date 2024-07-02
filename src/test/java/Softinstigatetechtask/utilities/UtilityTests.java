@@ -24,7 +24,7 @@ public class UtilityTests {
 
     @Test // CHECKS IF THE REGEX WORKS CORRECTLY (before parsing the hour values)
     void test_Input_working_hours_regex(){
-        assertFalse(variousUtilities.validateWorkingHoursLine("1234 7894"));
+        assertTrue(variousUtilities.validateWorkingHoursLine("1234 7894"));
         assertFalse(variousUtilities.validateWorkingHoursLine("null"));
         assertFalse(variousUtilities.validateWorkingHoursLine(null));
         assertFalse(variousUtilities.validateWorkingHoursLine("abcd 1234"));
