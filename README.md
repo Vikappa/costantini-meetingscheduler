@@ -15,6 +15,27 @@ Questo progetto implementa un sistema di gestione delle prenotazioni utilizzando
 - **Gestione delle prenotazioni**: Verifica che una prenotazione sia digitata correttamente, non si sovrapponga con un'altra e rientri negli orari di apertura dell'ufficio.
 - **Validazione e parsing**: Utilizza regex per la validazione e il parsing delle stringhe di input.
 
+## 🚀 Come Utilizzare
+Avviare la build del progetto e avviare il main.java. Il codice chiedere di digitare una serie di input in linea come questo
+
+#### Esempio di input
+```
+0900 1730
+2011-03-17 10:17:06 EMP001
+2011-03-21 09:00 2
+2011-03-16 12:34:56 EMP002
+2011-03-21 09:00 2
+2011-03-16 09:28:23 EMP003
+2011-03-22 14:00 2
+2011-03-17 11:23:45 EMP004
+2011-03-22 16:00 1
+2011-03-15 17:29:12 EMP005
+2011-03-21 16:00 3
+```
+
+La prima riga contiene gli orari di apertura e chiusura dell'ufficio.
+
+
 ## 📦 Struttura del Progetto
 
 - **BookingManager**: Classe Singleton che gestisce tutte le prenotazioni. Controlla che una prenotazione sia corretta, non si sovrapponga con altre e rientri negli orari di apertura dell'ufficio.
