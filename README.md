@@ -1,94 +1,72 @@
+<h1 align="center">Booking Management System</h1>
 
-# Booking Management System
-## Project Structure
+<p align="center">
+  <a href="https://imgshields.io"><img src="https://img.shields.io/badge/Java-Spring-007396?logo=java&logoColor=white" alt="Java Spring"></a>
+  <a href="https://imgshields.io"><img src="https://img.shields.io/badge/Testing-JUnit5-25A162?logo=junit5&logoColor=white" alt="JUnit 5"></a>
+  <a href="https://imgshields.io"><img src="https://img.shields.io/badge/Validation-Regex-FF4500?logo=regex&logoColor=white" alt="Regex"></a>
+</p>
 
-I used Java Spring to write a Singleton Bean Class, BookingManager, that holds all the schedules and checks werther a schedule is typed correctly and it's not overlapping with another or booking out of the office opening hours.
-This project implements a booking management system using Java Spring. The system processes batches of booking requests for meetings in a boardroom, ensuring all bookings are valid and non-overlapping, and fall within the specified office hours.
+## 📜 Descrizione
 
-I also created a Various Utilities service class to keep the code clean. It holds the validation with regex methods and the conflict checking methods.
+Questo progetto implementa un sistema di gestione delle prenotazioni utilizzando **Java Spring**. Il sistema elabora batch di richieste di prenotazione per riunioni in una sala conferenze, assicurando che tutte le prenotazioni siano valide, non si sovrappongano e rientrino negli orari di apertura specificati.
 
-## Project Structure
+## 🌟 Funzionalità
 
-The Schedule class is full of various formatter and parser because the the costructor is based on String typed by the users and validated via regex but later the schedule object is confronted in many other ways and it's better to have a Schedule class that holds all the code in a more structured way.
+- **Gestione delle prenotazioni**: Verifica che una prenotazione sia digitata correttamente, non si sovrapponga con un'altra e rientri negli orari di apertura dell'ufficio.
+- **Validazione e parsing**: Utilizza regex per la validazione e il parsing delle stringhe di input.
+
+## 📦 Struttura del Progetto
+
+- **BookingManager**: Classe Singleton che gestisce tutte le prenotazioni. Controlla che una prenotazione sia corretta, non si sovrapponga con altre e rientri negli orari di apertura dell'ufficio.
+- **VariousUtilities**: Classe di servizio che contiene metodi di utilità per mantenere il codice pulito. Include metodi di validazione tramite regex e di controllo dei conflitti.
+- **Schedule**: Classe che contiene vari formattatori e parser. Il costruttore si basa su stringhe digitate dagli utenti e validate tramite regex.
+
+## 📝 Implementazione
 
 ### BookingManager
-A Singleton Bean class that holds all the schedules. It checks whether a schedule is typed correctly, does not overlap with another, and falls within the office opening hours.
 
-The main execution is set in the BookingCommandLineRunner class. It's a simple runner that reads the input file line by line and then calls the BookingManager to add the schedule to the schedule list. It implements the CommandLineRunner interface to run automatically the main method once the application is fully started.
+- **Descrizione**: Classe Singleton che contiene tutte le prenotazioni. Controlla che una prenotazione sia corretta, non si sovrapponga con altre e rientri negli orari di apertura dell'ufficio.
+- **Metodi principali**:
+  - `setWorkingHours(String line)`: Imposta gli orari di apertura dell'ufficio.
+  - `addSchedule(String firstLine, String secondLine)`: Aggiunge una prenotazione alla lista delle prenotazioni.
 
-### Various Utilities
-A service class to keep the code clean. It includes:
-- Validation methods using regex.
-- Conflict checking methods.
-- Office hour compatibility checking.
+### VariousUtilities
 
-## Class Tests
+- **Descrizione**: Classe di servizio che contiene metodi di utilità per mantenere il codice pulito.
+- **Metodi principali**:
+  - `validateFirstLineStringFormat(String input)`: Valida il formato della prima linea di input.
+  - `validateSecondLineStringFormat(String input)`: Valida il formato della seconda linea di input.
+  - `validateWorkingHoursLine(String input)`: Valida il formato della linea degli orari di lavoro.
+  - `checkScheduleConflicts(ArrayList<Schedule> schedules, Schedule schedule)`: Controlla se ci sono conflitti tra le prenotazioni.
+  - `isScheduleInsideOfficeHours(LocalTime openingTime, LocalTime closingTime, Schedule schedule)`: Controlla se una prenotazione rientra negli orari di apertura dell'ufficio.
+
+### Schedule
+
+- **Descrizione**: Classe che contiene vari formattatori e parser. Il costruttore si basa su stringhe digitate dagli utenti e validate tramite regex.
+- **Metodi principali**:
+  - `getStartAt()`: Ritorna l'orario di inizio della prenotazione.
+  - `getCalculatedEndAt()`: Ritorna l'orario di fine della prenotazione calcolato.
+
+## 📂 package.json
+
+- **dev**: Utilizzando `nodemon`, verifica che il file `src` sia stato modificato e in caso compila di nuovo l'output nella cartella `dist`, poi esegue i test e lancia il programma.
+- **build**: Solo compilazione.
+- **test**: Solo testing.
+- **run-only**: Esegue solo il file `index` in `/dist`.
+
+## 🧪 UnitTest
+
 ### Various Utilities Test
-A test class that ensures that regexes and hour checking methos are working fine
+
+- **Descrizione**: Classe di test che garantisce che le regex e i metodi di controllo degli orari funzionino correttamente.
 
 ### Booking Manager Test
-A test class that ensures that Schedules are added or not following task logic 
 
-## What i used
-### Schedule
-This class contains various formatters and parsers. The constructor is based on strings typed by users and validated via regex. It ensures the Schedule object is well-structured for comparison and other operations.
+- **Descrizione**: Classe di test che garantisce che le prenotazioni vengano aggiunte o meno seguendo la logica delle attività.
 
-I used Java Spring to set up the project.
-I used regex expressions to check the input string to be strictly formatted and valid. 
-I used lambda functions to iterate the arrays to filter and print objects and give the exact same output as requested and showed in the task instructions.
+## 🛠️ Tecnologie Utilizzate
 
-## Technologies Used
-
-- **Java Spring**: For setting up the project and dependency injection.
-- **Regex Expressions**: For strict input string validation.
-- **Lambda Functions**: For iterating over arrays, filtering, and printing objects to match the output as requested.
-- **J Unit Test 5**: For testing the project.
-
-## Input and Output Example
-
-ex:
-```
-### Input
-```
-0900 1730
-2011-03-17 10:17:06 EMP001
-2011-03-21 09:00 2
-
-@@ -30,6 +41,7 @@ ex:
-2011-03-21 16:00 3
-```
-
-
-### Output
-```
-2011-03-21
-
-@@ -39,26 +51,14 @@ ex:
-16:00 17:00 EMP004
-```
-
-## Original request:
-```
-
-Your employer has an existing system for employees to submit booking requests for meetings in the boardroom. Your employer has now asked you to to implement a system for processing batches of booking requests.
-```
-
-### Input
-
-Your processing system must process input as text. The first line of the input text represents the company office hours, in 24 hour clock format, and the remainder of the input represents individual booking requests. Each booking request is in the following format.
-
-```
-[request submission time, in the format YYYY-MM-DD HH:MM:SS][arch:employee id]
-[meeting start time, in the format YYYY-MM-DD HH:MM][arch:meeting duration in hours]
-```
-## Requirements
-
-Your processing system must meet the following requirements:
-
-### Tasks
-
--   No part of a meeting may fall outside office hours ✅
--   Meetings may not overlap. ✅
--   The booking submission system only allows one submission at a time, so submission times are guaranteed to be unique.✅
--   Bookings must be processed in the chronological order in which they were submitted.✅
--   The ordering of booking submissions in the supplied input is not guaranteed.✅
+- **Java Spring**: Per la configurazione del progetto e l'iniezione delle dipendenze.
+- **Regex Expressions**: Per la validazione rigorosa delle stringhe di input.
+- **Lambda Functions**: Per iterare sugli array, filtrare e stampare oggetti per ottenere l'output esatto richiesto.
+- **JUnit 5**: Per il testing del progetto.
